@@ -1,0 +1,157 @@
+openapi: '3.0.3'
+info:
+  title: SEHATI API
+  version: 1.0.0
+  description: API ini merupakan project capstone dari Coding Camp powered by DBS faundation yang bertujuan untuk sistem konsultasi awal soal mental helt.
+  contact:
+    name: Ary Kurnia
+    email: aryk922@gmail.com
+servers:
+  - url: http://localhost:3000
+    description: Local Server
+  - url: https://sehati-api.arykurnia.my.id/v1/
+    description: Production Server
+paths:
+  /:
+    get:
+      tags:
+        - Welcome
+      summary: Welcome to the API
+      description: Anda bisa menggunakan methhod ini untuk melakukan conection test.
+      responses:
+        '200':
+          description: Welcome to the API
+          content:
+            application/json:
+              example:
+                error: false
+                message: Welcome to the SEHATI API
+  /register:
+    post:
+      tags:
+        - Auth
+      summary: Register user
+      description: Anda bisa menggunakan methhod ini untuk melakukan register user baru.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/register'
+      responses:
+        '201':
+          description: Register user
+          content:
+            application/json:
+              example:
+                error: false
+                message: user created
+        '409':
+          description: Email already exist
+          content:
+            application/json:
+              example:
+                error: true
+                message: email already exist
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: login user
+      description: Gunakan methhod ini untuk melakukan login user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/login'
+      responses:
+        '200':
+          description: Register user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      userId:
+                        type: string
+                        example: user-yj5pc_LARC_AgK61
+                      name:
+                        type: string
+                        example: Budi Ari
+                      token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiXXXXX
+        '400':
+          description: Invalid email or password
+          content:
+            application/json:
+              example:
+                error: true
+                message: invalid email or password
+
+components:
+  schemas:
+    register:
+      type: object
+      required:
+        - name
+        - gender
+        - birth
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          example: Budi Ari
+        gender:
+          type: string
+          enum:
+            - male
+            - female
+          example: male
+        birth:
+          type: string
+          example: 2003-01-05
+        email:
+          type: string
+          example: qhY4o@example.com
+        password:
+          type: string
+    login:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: qhY4o@example.com
+        password:
+          type: string
+    user:
+      type: object
+      required:
+        - name
+        - gender
+        - email
+      properties:
+        name:
+          type: string
+          example: Budi Ari
+        gender:
+          type: string
+          enum:
+            - male
+            - female
+          example: male
+        email:
+          type: string
+          example: qhY4o@example.com
