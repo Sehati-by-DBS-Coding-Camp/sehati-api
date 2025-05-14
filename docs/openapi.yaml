@@ -1,4 +1,4 @@
-openapi: '3.0.3'
+openapi: '3.1.0'
 info:
   title: SEHATI API
   version: 1.0.0
@@ -36,7 +36,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/register'
+              type: object
+              required:
+                - name
+                - gender
+                - birth
+                - email
+                - password
+              properties:
+                name:
+                  $ref: '#/components/schemas/user/properties/name'
+                gender:
+                  $ref: '#/components/schemas/user/properties/gender'
+                birth:
+                  $ref: '#/components/schemas/user/properties/birth'
+                email:
+                  $ref: '#/components/schemas/user/properties/email'
+                password:
+                  $ref: '#/components/schemas/user/properties/password'
       responses:
         '201':
           description: Register user
@@ -62,7 +79,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/login'
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  $ref: '#/components/schemas/user/properties/email'
+                password:
+                  $ref: '#/components/schemas/user/properties/password'
       responses:
         '200':
           description: Register user
@@ -78,17 +103,16 @@ paths:
                     type: string
                     example: success
                   data:
-                    type: object
+                    type: object                    
                     properties:
                       userId:
-                        type: string
-                        example: user-yj5pc_LARC_AgK61
+                        $ref: '#/components/schemas/user/properties/userId'
                       name:
-                        type: string
-                        example: Budi Ari
+                        $ref: '#/components/schemas/user/properties/name'
                       token:
                         type: string
-                        example: eyJhbGciOiJIUzI1NiXXXXX
+                        format: JWT
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
         '400':
           description: Invalid email or password
           content:
@@ -96,18 +120,210 @@ paths:
               example:
                 error: true
                 message: invalid email or password
+  /user/{userId}:
+    get:
+      tags:
+        - User
+      summary: Get user info
+      description: Gunakan methhod ini untuk melakukan get user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID pengguna yang ingin diambil informasinya
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: success
+                  data:
+                      type: object
+                      properties:
+                        userId:
+                          $ref: '#/components/schemas/user/properties/userId'
+                        name:
+                          $ref: '#/components/schemas/user/properties/name'
+                        gender:
+                          $ref: '#/components/schemas/user/properties/gender'
+                        birth:
+                          $ref: '#/components/schemas/user/properties/birth'
+                        email:
+                          $ref: '#/components/schemas/user/properties/email'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              example:
+                error: true
+                message: user not found
+    put:
+      tags:
+        - User
+      summary: Update user
+      description: Gunakan methhod ini untuk melakukan update user.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID pengguna yang ingin diupdate
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/user/properties/name'
+                gender:
+                  $ref: '#/components/schemas/user/properties/gender'
+                birth:
+                  $ref: '#/components/schemas/user/properties/birth'
+                email:
+                  $ref: '#/components/schemas/user/properties/email'
+      responses:
+        '200':
+          description: Update user
+          content:
+            application/json:
+              example:
+                error: false
+                message: user updated
+        '404':
+          description: User not found'
+          content:
+            application/json:
+              example:
+                error: true
+                message: user not found
+  /assesment:
+    post:
+      tags:
+        - Assesment
+      summary: Create assesment
+      description: Gunakan methhod ini untuk melakukan create assesment.
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - perasaanNegatif
+                - ketenangan
+                - mulutKering
+                - perasaanPositif
+              properties:
+                ketenangan:
+                  $ref: '#/components/schemas/assesment/properties/ketenangan'
+                mulutKering:
+                  $ref: '#/components/schemas/assesment/properties/mulutKering'
+                perasaanPositif:
+                  $ref: '#/components/schemas/assesment/properties/perasaanPositif'
+                keluhanTambahan:
+                  $ref: '#/components/schemas/assesment/properties/keluhanTambahan'
+      responses:
+        '200':
+          description: Create assesment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/assesment'
+        '404':
+          description: not found
+          content:
+            application/json:
+              example:
+                error: true
+                message: not found
+  /assesment/{assesmentId}:
+    get:
+      tags:
+        - Assesment
+      summary: Get assesment
+      description: Gunakan methhod ini untuk melakukan get assesment.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: assesmentId
+          in: path
+          required: true
+          description: ID assesment yang ingin diambil informasinya
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get assesment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/assesment'
+  /riwayat{userId}:
+    get:
+      tags:
+        - Riwayat
+      summary: Get riwayat
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: userId yang ingin diambil informasinya
+          schema:
+            type: string
+      description: Gunakan methhod ini untuk melakukan get riwayat.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Get riwayat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/assesment'
+        '404':
+          description: not found
+          content:
+            application/json:
+              example:
+                error: true
+                message: not found
 
 components:
   schemas:
-    register:
+    user:
       type: object
-      required:
-        - name
-        - gender
-        - birth
-        - email
-        - password
       properties:
+        userId:
+          type: string
+          example: user-yj5pc_LARC_AgK61
         name:
           type: string
           example: Budi Ari
@@ -119,39 +335,59 @@ components:
           example: male
         birth:
           type: string
+          format: date
           example: 2003-01-05
         email:
           type: string
+          format: email
           example: qhY4o@example.com
         password:
           type: string
-    login:
+          format: password
+          example: password123
+    assesment:
       type: object
-      required:
-        - email
-        - password
       properties:
-        email:
+        id:
           type: string
-          example: qhY4o@example.com
-        password:
+          example: 123
+        ketenangan:
+          type: number
+          minimum: 0
+          maximum: 3
+          example: 3
+        mulutKering:
+          type: number
+          minimum: 0
+          maximum: 3
+          example: 0
+        perasaanPositif:
+          type: number
+          minimum: 0
+          maximum: 3
+          example: 2
+        keluhanTambahan:
           type: string
-    user:
-      type: object
-      required:
-        - name
-        - gender
-        - email
-      properties:
-        name:
+          example: "Saya merasa sulit akhir-akhir ini dan sering cemas tentang pekerjaan saya"
+        hasil:
+          type: object
+          properties:
+            depresi:
+              type: number
+              minimum: 0
+              maximum: 100
+              example: 10
+            kecemasan:
+              type: number
+              minimum: 0
+              maximum: 100
+              example: 80
+            stres:
+              type: number
+              minimum: 0
+              maximum: 100
+              example: 60
+        date:
           type: string
-          example: Budi Ari
-        gender:
-          type: string
-          enum:
-            - male
-            - female
-          example: male
-        email:
-          type: string
-          example: qhY4o@example.com
+          format: timestamp
+          example: 2022-01-01T00:00:00.000Z
