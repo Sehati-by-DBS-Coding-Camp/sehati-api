@@ -1,0 +1,33 @@
+{
+  "name": "sehati-api",
+  "version": "1.0.0",
+  "description": "SEHATI is project capstone from DBS Coding Camp 2025",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sehati-by-DBS-Coding-Camp/sehati-api.git"
+  },
+  "author": "Ary Kurnia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sehati-by-DBS-Coding-Camp/sehati-api/issues"
+  },
+  "homepage": "https://github.com/Sehati-by-DBS-Coding-Camp/sehati-api#readme",
+  "dependencies": {
+    "@hapi/hapi": "^21.4.0",
+    "dotenv": "^16.5.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "eslint": "^9.27.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.10"
+  }
+}
