@@ -54,6 +54,26 @@ paths:
                   $ref: '#/components/schemas/user/properties/email'
                 password:
                   $ref: '#/components/schemas/user/properties/password'
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+                - gender
+                - birth
+                - email
+                - password
+              properties:
+                name:
+                  $ref: '#/components/schemas/user/properties/name'
+                gender:
+                  $ref: '#/components/schemas/user/properties/gender'
+                birth:
+                  $ref: '#/components/schemas/user/properties/birth'
+                email:
+                  $ref: '#/components/schemas/user/properties/email'
+                password:
+                  $ref: '#/components/schemas/user/properties/password'
       responses:
         '201':
           description: Register user
@@ -78,6 +98,17 @@ paths:
       requestBody:
         content:
           application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  $ref: '#/components/schemas/user/properties/email'
+                password:
+                  $ref: '#/components/schemas/user/properties/password'
+          multipart/form-data:
             schema:
               type: object
               required:
@@ -275,7 +306,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/assesment'
-  /riwayat{userId}:
+  /riwayat/{userId}:
     get:
       tags:
         - Riwayat
@@ -389,5 +420,5 @@ components:
               example: 60
         date:
           type: string
-          format: timestamp
+          format: date-time
           example: 2022-01-01T00:00:00.000Z
