@@ -1,0 +1,84 @@
+const Joi = require('joi');
+const HelloController = require('../controllers/HelloController');
+const UsersController = require('../controllers/UsersController');
+
+const pattern = '^[a-zA-Z0-9]{6,10}$';
+
+const routes = [
+  {
+    method: 'GET',
+    path: '/',
+    handler: HelloController.sayHelloWorld,
+  },
+  {
+    method: 'POST',
+    path: '/users',
+    options: {
+      validate: {
+        // Skema validasi untuk payload (request body)
+        payload: Joi.object({
+          name: Joi.string()
+            .min(3)
+            .max(25)
+            .required()
+            .messages({
+              'string.min': 'Nama minimal harus {#limit} karakter.',
+              'string.max': 'Nama maksimal {#limit} karakter.',
+              'string.empty': 'Nama tidak boleh kosong.',
+              'any.required': 'Nama wajib diisi.',
+            }),
+          email: Joi.string()
+            .email({ tlds: { allow: ['com', 'net', 'id', 'org'] } })
+            .required()
+            .messages({
+              'string.email': 'Email harus format email yang valid.',
+              'string.empty': 'Email tidak boleh kosong.',
+              'any.required': 'Email wajib diisi.',
+            }),
+          password: Joi.string()
+            .pattern(new RegExp(pattern))
+            .required()
+            .messages({
+              'string.pattern.base': 'Password harus terdiri dari 6-10 karakter (huruf, angka, atau simbol).',
+              'string.empty': 'Password tidak boleh kosong.',
+              'any.required': 'Password wajib diisi.',
+            }),
+          gender: Joi.string()
+            .valid('male', 'female')
+            .required()
+            .messages({
+              'any.only': 'Gender harus salah satu dari: male atau female.',
+              'string.empty': 'Gender tidak boleh kosong.',
+              'any.required': 'Gender wajib diisi.',
+            }),
+          birth: Joi.date()
+            .iso() // Memastikan format tanggal ISO 8601 (YYYY-MM-DD)
+            .max('now') // Tanggal lahir tidak boleh di masa depan
+            .required()
+            .messages({
+              'date.format': 'Tanggal lahir harus dalam format YYYY-MM-DD.',
+              'date.max': 'Tanggal lahir tidak boleh di masa depan.',
+              'any.required': 'Tanggal lahir wajib diisi.',
+            }),
+        }).options({ abortEarly: false }),
+        failAction: (request, h, err) => {
+          const errors = err.details.map((detail) => ({
+            field: detail.path.join('.'),
+            message: detail.message.replace(/"/g, ''),
+          }));
+
+          // Mengembalikan respons dengan status 400 dan array kesalahan
+          return h.response({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Data validasi tidak sesuai.',
+            details: errors,
+          }).code(400).takeover();
+        },
+      },
+    },
+    handler: UsersController.createUser,
+  },
+];
+
+module.exports = routes;

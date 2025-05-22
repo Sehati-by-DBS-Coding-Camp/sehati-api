@@ -28,9 +28,10 @@ Clean Architecture adalah filosofi desain perangkat lunak (software) yang memisa
 │   │   ├── model
 │   │   └── service
 │   └── infrastructure
-│       ├── api
-│       │   ├── routes
-│       │   └── middleware
+│       ├── http 
+│       │   └── hapi
+│       │       ├── routes
+│       │       └── middleware
 │       ├── db
 │       └── logger
 ├── tests
