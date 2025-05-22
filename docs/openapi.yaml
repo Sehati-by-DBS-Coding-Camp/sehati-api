@@ -80,15 +80,27 @@ paths:
           content:
             application/json:
               example:
+                statusCode: 201
                 error: false
                 message: user created
+                data:
+                  id: oawxGXDAdU
+                  name: Budi Ari
+                  email: budi@gmail
         '409':
           description: Email already exist
           content:
             application/json:
               example:
-                error: true
-                message: email already exist
+                statusCode: 409
+                error: Conflict
+                message: Email sudah terdaftar. Silakan gunakan email lain.
+        '400':
+          description: Data validasi tidak sesuai.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validationError'
   /login:
     post:
       tags:
@@ -127,6 +139,9 @@ paths:
               schema:
                 type: object
                 properties:
+                  statusCode:
+                    type: integer
+                    example: 200
                   error:
                     type: boolean
                     example: false
@@ -149,6 +164,7 @@ paths:
           content:
             application/json:
               example:
+                statusCode: 400
                 error: true
                 message: invalid email or password
   /user/{userId}:
@@ -174,6 +190,9 @@ paths:
               schema:
                 type: object
                 properties:
+                  statusCode:
+                    type: integer
+                    example: 200
                   error:
                     type: boolean
                     example: false
@@ -198,6 +217,7 @@ paths:
           content:
             application/json:
               example:
+                statusCode: 404
                 error: true
                 message: user not found
     put:
@@ -234,6 +254,7 @@ paths:
           content:
             application/json:
               example:
+                statusCode: 200
                 error: false
                 message: user updated
         '404':
@@ -241,6 +262,7 @@ paths:
           content:
             application/json:
               example:
+                statusCode: 404
                 error: true
                 message: user not found
   /assesment:
@@ -329,6 +351,9 @@ paths:
               schema:
                 type: object
                 properties:
+                  statusCode:
+                    type: integer
+                    example: 200
                   error:
                     type: boolean
                     example: false
@@ -344,6 +369,7 @@ paths:
           content:
             application/json:
               example:
+                statusCode: 404
                 error: true
                 message: not found
 
@@ -422,3 +448,23 @@ components:
           type: string
           format: date-time
           example: 2022-01-01T00:00:00.000Z
+    validationError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: "Data validasi tidak sesuai."
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: "name"
+              message:
+                type: string
+                example: "Nama tidak boleh kosong."

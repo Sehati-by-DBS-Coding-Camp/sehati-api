@@ -1,4 +1,4 @@
-const userRepository = require('../../src/domain/repository/userRepository');
+const userRepository = require('../../src/domain/repository/UserRepository');
 
 const pool = require('../../src/infrastructure/db/mysql/connection');
 const { getUsers } = require('../repositories/userRepository');
