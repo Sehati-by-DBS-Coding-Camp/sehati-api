@@ -24,6 +24,7 @@ paths:
           content:
             application/json:
               example:
+                statusCode: 200
                 error: false
                 message: Welcome to the SEHATI API
   /register:
@@ -451,6 +452,9 @@ components:
     validationError:
       type: object
       properties:
+        statusCode:
+          type: integer
+          example: 400
         error:
           type: string
           example: Bad Request
