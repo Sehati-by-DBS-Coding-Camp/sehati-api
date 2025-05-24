@@ -1,10 +1,13 @@
 const mysql = require('mysql2/promise');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || '35.219.5.8',
-  user: process.env.DB_USER || 'arykurnia',
-  password: process.env.DB_PASSWORD || 'adakahbosq',
-  database: process.env.DB_NAME || 'sehati_db',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 
   // Jika semua koneksi dalam pool sedang digunakan, tunggu hingga ada yang tersedia
   waitForConnections: true,

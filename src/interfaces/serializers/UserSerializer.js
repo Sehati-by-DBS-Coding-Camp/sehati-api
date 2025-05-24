@@ -1,14 +1,13 @@
-module.exports = {
-  serialize(user) {
+class UserSerializer {
+  static serialize(user) {
     return {
-      statusCode: 201,
-      error: false,
-      message: 'user created',
-      data: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
+      id: user.id,
+      name: user.name,
+      gender: user.gender,
+      birth: user.birth,
+      email: user.email,
     };
-  },
-};
+  }
+}
+
+module.exports = UserSerializer;

@@ -1,30 +1,41 @@
-const CreateUser = require('../../application/use_cases/CreateUser');
-const UserSerializer = require('../serializers/UserSerializer');
+const Boom = require('@hapi/boom');
+const { nanoid } = require('nanoid');
 
-module.exports = {
-  async createUser(request, h) {
-    const {
-      name, email, gender,
-      birth, password,
-    } = request.payload;
+const resgisterSerializer = require('../serializers/RegisterSerializer');
+const loginSerializer = require('../serializers/loginSerializer');
 
-    // Validasi data (misalnya pastikan email tidak kosong)
-    if (!name || !email) {
-      return h.response({ error: 'Name and email are required' }).code(400);
+class UsersController {
+  constructor({ registerUser, loginUser, userSerializer }) {
+    this.registerUser = registerUser;
+    this.loginUser = loginUser;
+    this.userSerializer = userSerializer;
+  }
+
+  async register(request, h) {
+    try {
+      const id = nanoid(10);
+
+      const payload = { ...request.payload, id };
+
+      await this.registerUser.execute(payload);
+
+      return h.response(resgisterSerializer.serialize(payload, 201)).code(201);
+    } catch (err) {
+      if (err.code === 'ER_DUP_ENTRY') return Boom.conflict('Email already registered');
+      return Boom.badImplementation(err.message);
     }
+  }
 
-    const data = {
-      name,
-      email,
-      gender,
-      birth,
-      password,
-    };
+  async login(request, h) {
+    try {
+      const { accessToken, user } = await this.loginUser.execute(request.payload);
 
-    // Panggil use case untuk membuat user
-    const user = await CreateUser.execute(data);
+      return h.response(loginSerializer.serialize({ token: accessToken, user, code: 200 }))
+        .code(200);
+    } catch (err) {
+      return Boom.unauthorized('Invalid credentials');
+    }
+  }
+}
 
-    // Return response dengan serialized user
-    return h.response(UserSerializer.serialize(user)).code(201);
-  },
-};
+module.exports = UsersController;

@@ -31,10 +31,19 @@ async function createUser(user) {
   }
 }
 
-// READ
-async function getUserById(id) {
-  const [rows] = await pool.query('SELECT * FROM user WHERE id = ?', [id]);
-  return rows[0];
+async function findByEmail(user) {
+  const { email } = user;
+  try {
+    await pool.execute(
+      'SELECT * FROM user WHERE username = ?',
+      [email],
+    );
+
+    return user;
+  } catch (error) {
+    console.error('Error creating user from pool:', error);
+    throw Boom.internal('Terjadi kesalahan saat login. Silakan coba lagi nanti.');
+  }
 }
 
 // UPDATE
@@ -55,7 +64,7 @@ async function deleteUser(id) {
 
 module.exports = {
   createUser,
-  getUserById,
+  findByEmail,
   updateUser,
   deleteUser,
 };

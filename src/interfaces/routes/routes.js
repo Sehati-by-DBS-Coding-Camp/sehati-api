@@ -1,10 +1,10 @@
 const Joi = require('joi');
 const HelloController = require('../controllers/HelloController');
-const UsersController = require('../controllers/UsersController');
+// const RegisterController = require('../controllers/RegisterController');
 
-const pattern = '^[a-zA-Z0-9]{6,10}$';
+const pattern = '^[a-zA-Z0-9]{6,15}$';
 
-const routes = [
+const routes = (controller) => [
   {
     method: 'GET',
     path: '/',
@@ -12,8 +12,10 @@ const routes = [
   },
   {
     method: 'POST',
-    path: '/users',
+    path: '/register',
+    handler: controller.register.bind(controller),
     options: {
+      auth: false,
       validate: {
         // Skema validasi untuk payload (request body)
         payload: Joi.object({
@@ -39,7 +41,7 @@ const routes = [
             .pattern(new RegExp(pattern))
             .required()
             .messages({
-              'string.pattern.base': 'Password harus terdiri dari 6-10 karakter (huruf, angka, atau simbol).',
+              'string.pattern.base': 'Password harus terdiri dari 6-15 karakter (huruf, angka, atau simbol).',
               'string.empty': 'Password tidak boleh kosong.',
               'any.required': 'Password wajib diisi.',
             }),
@@ -77,7 +79,48 @@ const routes = [
         },
       },
     },
-    handler: UsersController.createUser,
+  },
+  {
+    method: 'POST',
+    path: '/login',
+    handler: controller.login.bind(controller),
+    options: {
+      auth: false,
+      validate: {
+        payload: Joi.object({
+          email: Joi.string()
+            .email({ tlds: { allow: ['com', 'net', 'id', 'org'] } })
+            .required()
+            .messages({
+              'string.email': 'Email harus format email yang valid.',
+              'string.empty': 'Email tidak boleh kosong.',
+              'any.required': 'Email wajib diisi.',
+            }),
+          password: Joi.string()
+            .pattern(new RegExp(pattern))
+            .required()
+            .messages({
+              'string.pattern.base': 'Password harus terdiri dari 6-15 karakter (huruf, angka, atau simbol).',
+              'string.empty': 'Password tidak boleh kosong.',
+              'any.required': 'Password wajib diisi.',
+            }),
+        }).options({ abortEarly: false }),
+        failAction: (request, h, err) => {
+          const errors = err.details.map((detail) => ({
+            field: detail.path.join('.'),
+            message: detail.message.replace(/"/g, ''),
+          }));
+
+          // Mengembalikan respons dengan status 400 dan array kesalahan
+          return h.response({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'Data validasi tidak sesuai.',
+            details: errors,
+          }).code(400).takeover();
+        },
+      },
+    },
   },
 ];
 
