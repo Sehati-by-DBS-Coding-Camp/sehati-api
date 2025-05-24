@@ -85,7 +85,7 @@ paths:
                 error: false
                 message: user created
                 data:
-                  id: oawxGXDAdU
+                  userId: oawxGXDAdU
                   name: Budi Ari
                   email: budi@gmail
         '409':
@@ -156,7 +156,9 @@ paths:
                         $ref: '#/components/schemas/user/properties/userId'
                       name:
                         $ref: '#/components/schemas/user/properties/name'
-                      token:
+                      email:
+                        $ref: '#/components/schemas/user/properties/email'
+                      accessToken:
                         type: string
                         format: JWT
                         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
@@ -305,6 +307,7 @@ paths:
           content:
             application/json:
               example:
+                statusCode: 404
                 error: true
                 message: not found
   /assesment/{assesmentId}:
