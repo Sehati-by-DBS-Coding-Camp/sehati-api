@@ -9,6 +9,9 @@ const routes = (controller) => [
     method: 'GET',
     path: '/',
     handler: HelloController.sayHelloWorld,
+    options: {
+      auth: false,
+    },
   },
   {
     method: 'POST',

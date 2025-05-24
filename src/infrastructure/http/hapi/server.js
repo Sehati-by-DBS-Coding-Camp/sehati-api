@@ -42,16 +42,10 @@ const init = async () => {
       maxAgeSec: 14400, // 4 hours
       timeSkewSec: 15,
     },
-    validate: (artifacts, request, h) => {
-      const user = users.find(u => u.id === artifacts.decoded.payload.id);
-      if (!user) {
-        return { isValid: false };
-      }
-      return {
-        isValid: true,
-        credentials: artifacts.decoded.payload,
-      };
-    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: artifacts.decoded.payload, // langsung dari token
+    }),
   });
 
   server.auth.default('jwt');
