@@ -1,5 +1,5 @@
 module.exports = {
-  serialize({ user, code, token }) {
+  serialize({ user, code }) {
     return {
       statusCode: code,
       error: false,
@@ -7,8 +7,11 @@ module.exports = {
       data: {
         userId: user.userId,
         name: user.name,
+        gender: user.gender,
+        birth: user.birth,
         email: user.email,
-        accessToken: token,
+        createdAt: user.createadt,
+        updatedAt: user.updateadt,
       },
     };
   },

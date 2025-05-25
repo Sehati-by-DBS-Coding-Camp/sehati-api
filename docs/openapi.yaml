@@ -215,6 +215,10 @@ paths:
                           $ref: '#/components/schemas/user/properties/birth'
                         email:
                           $ref: '#/components/schemas/user/properties/email'
+                        createdAt:
+                          $ref: '#/components/schemas/user/properties/createdAt'
+                        updatedAt:
+                          $ref: '#/components/schemas/user/properties/updatedAt'
         '404':
           description: User not found
           content:
@@ -406,6 +410,14 @@ components:
           type: string
           format: password
           example: password123
+        createdAt:
+          type: string
+          format: date-time
+          example: 2022-01-01T00:00:00.000Z
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2022-01-01T00:00:00.000Z
     assesment:
       type: object
       properties:

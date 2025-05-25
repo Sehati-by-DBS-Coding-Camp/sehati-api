@@ -7,6 +7,7 @@ const UserRepositoryMySQL = require('../../../interfaces/repositories/UserReposi
 const JwtAccessTokenManager = require('../../../interfaces/security/JwtAccessTokenManager');
 const RegisterUser = require('../../../application/use_cases/RegisterUser');
 const LoginUser = require('../../../application/use_cases/LoginUser');
+const GetUserById = require('../../../application/use_cases/GetUserById');
 const UsersController = require('../../../interfaces/controllers/UsersController');
 const routes = require('../../../interfaces/routes/routes');
 
@@ -15,7 +16,8 @@ const init = async () => {
   const accessTokenManager = new JwtAccessTokenManager(Jwt.token);
   const registerUser = new RegisterUser({ userRepository, passwordHasher: bcrypt });
   const loginUser = new LoginUser({ userRepository, passwordHasher: bcrypt, accessTokenManager });
-  const usersController = new UsersController({ registerUser, loginUser });
+  const getUserById = new GetUserById(userRepository);
+  const usersController = new UsersController({ registerUser, loginUser, getUserById });
 
   const server = Hapi.server({
     port: process.env.PORT || 3000,
@@ -42,16 +44,10 @@ const init = async () => {
       maxAgeSec: 14400, // 4 hours
       timeSkewSec: 15,
     },
-    validate: (artifacts, request, h) => {
-      const user = users.find(u => u.id === artifacts.decoded.payload.id);
-      if (!user) {
-        return { isValid: false };
-      }
-      return {
-        isValid: true,
-        credentials: artifacts.decoded.payload,
-      };
-    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: artifacts.decoded.payload, // langsung dari token
+    }),
   });
 
   server.auth.default('jwt');
