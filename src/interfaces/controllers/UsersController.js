@@ -1,7 +1,7 @@
 const Boom = require('@hapi/boom');
 const { nanoid } = require('nanoid');
 
-const resgisterSerializer = require('../serializers/RegisterSerializer');
+const resgisterSerializer = require('../serializers/registrationSerializer');
 const loginSerializer = require('../serializers/loginSerializer');
 
 class UsersController {
