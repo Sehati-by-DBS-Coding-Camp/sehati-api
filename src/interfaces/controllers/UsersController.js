@@ -3,11 +3,15 @@ const { nanoid } = require('nanoid');
 
 const resgisterSerializer = require('../serializers/registrationSerializer');
 const loginSerializer = require('../serializers/loginSerializer');
+const getUserSerializer = require('../serializers/getUserSerializer');
 
 class UsersController {
-  constructor({ registerUser, loginUser, userSerializer }) {
+  constructor({
+    registerUser, loginUser, getUserById, userSerializer,
+  }) {
     this.registerUser = registerUser;
     this.loginUser = loginUser;
+    this.getUserById = getUserById;
     this.userSerializer = userSerializer;
   }
 
@@ -34,6 +38,22 @@ class UsersController {
         .code(200);
     } catch (err) {
       return Boom.unauthorized('Invalid credentials');
+    }
+  }
+
+  async profile(request, h) {
+    try {
+      const req = request.params.userId;
+      const user = await this.getUserById.execute(req);
+      console.log('user', user);
+
+      return h.response(getUserSerializer.serialize({ user, code: 200 }))
+        .code(200);
+    } catch (err) {
+      if (err.code === 'USER_NOT_FOUND') {
+        return Boom.notFound('User id not found');
+      }
+      return Boom.badImplementation(err.message);
     }
   }
 }

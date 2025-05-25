@@ -125,6 +125,11 @@ const routes = (controller) => [
       },
     },
   },
+  {
+    method: 'GET',
+    path: '/user/{userId}',
+    handler: controller.profile.bind(controller),
+  },
 ];
 
 module.exports = routes;
