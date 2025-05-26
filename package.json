@@ -8,6 +8,8 @@
     "doc": "docs"
   },
   "scripts": {
+    "start": "node index.js",
+    "lint": "eslint .",
     "start-dev": "nodemon index.js",
     "test": "jest"
   },
