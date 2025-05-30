@@ -43,9 +43,8 @@ class UsersController {
 
   async profile(request, h) {
     try {
-      const req = request.params.userId;
-      const user = await this.getUserById.execute(req);
-      console.log('user', user);
+      const { userId } = request.params;
+      const user = await this.getUserById.execute(userId);
 
       return h.response(getUserSerializer.serialize({ user, code: 200 }))
         .code(200);
