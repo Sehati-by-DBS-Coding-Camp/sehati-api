@@ -33,5 +33,32 @@ class UserRepositoryMySQL extends UserRepository {
     }
     return rows[0];
   }
+
+  async updateUserById(userData) {
+    const sql = 'UPDATE user SET name = ?, gender = ?, birth = ?, email = ? WHERE userId = ?';
+    const [rows] = await this.pool.execute(
+      sql,
+      [userData.name, userData.gender, userData.birth, userData.email, userData.userId],
+    );
+
+    if (rows.affectedRows === 0) {
+      const error = new Error('User not found');
+      error.code = 'USER_NOT_FOUND';
+      throw error;
+    }
+
+    if (rows.changedRows === 0) {
+      const error = new Error('No changes made to the user');
+      error.code = 'NO_CHANGES';
+      throw error;
+    }
+
+    if (rows.changedRows > 0) {
+      return this.getUserById(userData.userId);
+    }
+
+    return false;
+  }
 }
+
 module.exports = UserRepositoryMySQL;

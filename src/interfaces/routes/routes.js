@@ -1,5 +1,5 @@
 const HelloController = require('../controllers/HelloController');
-const { registerSchema, loginSchema } = require('../../application/use_cases/validation/userValidation');
+const { registerSchema, loginSchema, updateUserSchema } = require('../../application/use_cases/validation/userValidation');
 const userAuthorization = require('../../application/use_cases/validation/userAuthorization');
 const validationErrorHandler = require('../utils/validationErrorHandler');
 // const RegisterController = require('../controllers/RegisterController');
@@ -49,6 +49,22 @@ const routes = (controller) => [
       ],
     },
     handler: controller.profile.bind(controller),
+  },
+  {
+    method: 'PUT',
+    path: '/users/{userId}',
+    options: {
+      validate: {
+        payload: updateUserSchema,
+        failAction: validationErrorHandler,
+      },
+      pre: [
+        {
+          method: userAuthorization, // Middleware untuk otorisasi
+        },
+      ],
+    },
+    handler: controller.updateUserProfile.bind(controller),
   },
 ];
 
