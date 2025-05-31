@@ -43,6 +43,37 @@ Clean Architecture adalah filosofi desain perangkat lunak (software) yang memisa
 └── README.md
 ```
 
+## commit rule
+**Penjelasan Format Conventional Commits dengan Scope**
+```
+<type>(<scope>): <short summary>
+```
+- **type**: Jenis perubahan (feat, fix, docs, dsb).
+- **scope**: (opsional) Bagian/fitur/komponen aplikasi yang berubah, ditulis dalam tanda kurung.
+- **short summary**: Ringkasan perubahan.
 
-source:
-[medium-elaurichetoho](https://medium.com/@elaurichetoho/clean-architecture-with-nodejs-4a62a67b2bff), [medium-ben](https://medium.com/@ben.dev.io/clean-architecture-in-node-js-39c3358d46f3)
+**Conventional Commits**
+- `feat`: Penambahan fitur baru
+- `fix`: Memperbaiki bug
+- `docs`: Perubahan dokumentasi saja
+- `style`: Perubahan format/tata letak kode (indentasi, spasi, dsb), tanpa - mengubah logic
+- `refactor`: Refactor kode (mengubah struktur tanpa mengubah perilaku)
+- `test`: Menambah/memperbaiki test
+- `chore`: Perubahan minor atau tugas rutin (misal update dependency)
+
+**Contoh Penggunaan:**
+- `feat(auth): add fitur autentikasi`
+  - Menambahkan fitur autentikasi pada bagian auth.
+- `fix(login): perbaiki validasi password`
+  - Memperbaiki bug validasi password pada halaman login.
+- `docs(readme): update cara instalasi`
+  - Update dokumentasi README pada bagian instalasi.
+
+**Contoh Commit Message Lainnya**
+```
+feat(profile): implement edit profile page
+fix(api): handle timeout error on data fetch
+chore(deps): update dependency react to v18
+refactor(user-service): optimize query for user lookup
+test(auth): add tests for login functionality
+```

@@ -170,7 +170,7 @@ paths:
                 statusCode: 400
                 error: true
                 message: invalid email or password
-  /user/{userId}:
+  /users/{userId}:
     get:
       tags:
         - User
@@ -219,6 +219,14 @@ paths:
                           $ref: '#/components/schemas/user/properties/createdAt'
                         updatedAt:
                           $ref: '#/components/schemas/user/properties/updatedAt'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                statusCode: 403
+                error: Forbidden
+                message: You are not allowed to access this resource
         '404':
           description: User not found
           content:
@@ -272,12 +280,12 @@ paths:
                 statusCode: 404
                 error: true
                 message: user not found
-  /assesment:
+  /assessment:
     post:
       tags:
-        - Assesment
-      summary: Create assesment
-      description: Gunakan methhod ini untuk melakukan create assesment.
+        - Assessment
+      summary: Create assessment
+      description: Gunakan methhod ini untuk melakukan create assessment.
       security:
         - bearerAuth: []
       requestBody:
@@ -292,20 +300,20 @@ paths:
                 - perasaanPositif
               properties:
                 ketenangan:
-                  $ref: '#/components/schemas/assesment/properties/ketenangan'
+                  $ref: '#/components/schemas/assessment/properties/ketenangan'
                 mulutKering:
-                  $ref: '#/components/schemas/assesment/properties/mulutKering'
+                  $ref: '#/components/schemas/assessment/properties/mulutKering'
                 perasaanPositif:
-                  $ref: '#/components/schemas/assesment/properties/perasaanPositif'
+                  $ref: '#/components/schemas/assessment/properties/perasaanPositif'
                 keluhanTambahan:
-                  $ref: '#/components/schemas/assesment/properties/keluhanTambahan'
+                  $ref: '#/components/schemas/assessment/properties/keluhanTambahan'
       responses:
         '200':
-          description: Create assesment
+          description: Create assessment
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/assesment'
+                $ref: '#/components/schemas/assessment'
         '404':
           description: not found
           content:
@@ -314,29 +322,29 @@ paths:
                 statusCode: 404
                 error: true
                 message: not found
-  /assesment/{assesmentId}:
+  /assessment/{assessmentId}:
     get:
       tags:
-        - Assesment
-      summary: Get assesment
-      description: Gunakan methhod ini untuk melakukan get assesment.
+        - Assessment
+      summary: Get assessment
+      description: Gunakan methhod ini untuk melakukan get assessment.
       security:
         - bearerAuth: []
       parameters:
-        - name: assesmentId
+        - name: assessmentId
           in: path
           required: true
-          description: ID assesment yang ingin diambil informasinya
+          description: ID assessment yang ingin diambil informasinya
           schema:
             type: string
       responses:
         '200':
-          description: Get assesment
+          description: Get assessment
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/assesment'
-  /riwayat/{userId}:
+                $ref: '#/components/schemas/assessment'
+  /history/{userId}:
     get:
       tags:
         - Riwayat
@@ -371,7 +379,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/assesment'
+                      $ref: '#/components/schemas/assessment'
         '404':
           description: not found
           content:
@@ -388,9 +396,11 @@ components:
       properties:
         userId:
           type: string
-          example: user-yj5pc_LARC_AgK61
+          example: yj5pc_LARC_AgK61
         name:
           type: string
+          minLength: 2
+          maxLength: 25
           example: Budi Ari
         gender:
           type: string
@@ -408,6 +418,8 @@ components:
           example: qhY4o@example.com
         password:
           type: string
+          minLength: 6
+          maxLength: 15
           format: password
           example: password123
         createdAt:
@@ -418,7 +430,7 @@ components:
           type: string
           format: date-time
           example: 2022-01-01T00:00:00.000Z
-    assesment:
+    assessment:
       type: object
       properties:
         id:

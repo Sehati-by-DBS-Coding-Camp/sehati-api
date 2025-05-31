@@ -7,12 +7,13 @@ const getUserSerializer = require('../serializers/getUserSerializer');
 
 class UsersController {
   constructor({
-    registerUser, loginUser, getUserById, userSerializer,
+    registerUser, loginUser, getUserById, userSerializer, updateUserById,
   }) {
     this.registerUser = registerUser;
     this.loginUser = loginUser;
     this.getUserById = getUserById;
     this.userSerializer = userSerializer;
+    this.updateUserById = updateUserById;
   }
 
   async register(request, h) {
@@ -43,9 +44,8 @@ class UsersController {
 
   async profile(request, h) {
     try {
-      const req = request.params.userId;
-      const user = await this.getUserById.execute(req);
-      console.log('user', user);
+      const { userId } = request.params;
+      const user = await this.getUserById.execute(userId);
 
       return h.response(getUserSerializer.serialize({ user, code: 200 }))
         .code(200);
@@ -53,6 +53,33 @@ class UsersController {
       if (err.code === 'USER_NOT_FOUND') {
         return Boom.notFound('User id not found');
       }
+      return Boom.badImplementation(err.message);
+    }
+  }
+
+  async updateUserProfile(request, h) {
+    try {
+      const { userId } = request.params;
+      const payload = { ...request.payload };
+      const userData = {
+        userId,
+        ...payload,
+      };
+
+      const user = await this.updateUserById.execute(userData);
+
+      return h.response(getUserSerializer.serialize({ user, code: 200 }))
+        .code(200);
+    } catch (err) {
+      if (err.code === 'USER_NOT_FOUND') {
+        return Boom.notFound('User id not found');
+      }
+
+      if (err.code === 'NO_CHANGES') {
+        return Boom.badRequest('No changes made to the user');
+      }
+
+      console.log(err);
       return Boom.badImplementation(err.message);
     }
   }
