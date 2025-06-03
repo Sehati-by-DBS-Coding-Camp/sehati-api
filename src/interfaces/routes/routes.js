@@ -3,6 +3,7 @@ const { registerSchema, loginSchema, updateUserSchema } = require('../../applica
 const userAuthorization = require('../../application/use_cases/validation/userAuthorization');
 const validationErrorHandler = require('../utils/validationErrorHandler');
 // const RegisterController = require('../controllers/RegisterController');
+const NewsController = require('../controllers/NewsController');
 
 const routes = (controller) => [
   {
@@ -65,6 +66,14 @@ const routes = (controller) => [
       ],
     },
     handler: controller.updateUserProfile.bind(controller),
+  },
+  {
+    method: 'GET',
+    path: '/news',
+    options: {
+      auth: false, // Tidak memerlukan otentikasi untuk endpoint ini
+    },
+    handler: NewsController.news,
   },
 ];
 
