@@ -344,6 +344,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/assessment'
+  /news:
+    get:
+      tags:
+        - News
+      summary: Get news
+      description: Gunakan methhod ini untuk melakukan get berita.
+      responses:
+        '200':
+          description: Get news
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/news'
+        '404':
+          description: not found
+          content:
+            application/json:
+              example:
+                statusCode: 404
+                error: true
+                message: not found
   /history/{userId}:
     get:
       tags:
@@ -476,6 +511,42 @@ components:
           type: string
           format: date-time
           example: 2022-01-01T00:00:00.000Z
+    news:
+      type: object
+      properties:
+        source:
+          type: object
+          properties:
+            id:
+              type: string
+              example: "nbc-news"
+            name:
+              type: string
+              example: "NBC News"
+        author:
+          type: string
+          example: "John Doe"
+        title:
+          type: string
+          example: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        description:
+          type: string
+          example: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        url:
+          type: string
+          format: url
+          example: "https://www.example.com/news/lorem-ipsum"
+        urlToImage:
+          type: string
+          format: url
+          example: "https://www.example.com/images/lorem-ipsum.jpg"
+        publishedAt:
+          type: string
+          format: timestamp
+          example: "2025-06-01T04:05:00Z"
+        content:
+          type: string
+          example: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     validationError:
       type: object
       properties:
