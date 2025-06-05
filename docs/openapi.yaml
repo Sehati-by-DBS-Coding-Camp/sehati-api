@@ -293,18 +293,13 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - perasaanNegatif
-                - ketenangan
-                - mulutKering
-                - perasaanPositif
               properties:
-                ketenangan:
-                  $ref: '#/components/schemas/assessment/properties/ketenangan'
-                mulutKering:
-                  $ref: '#/components/schemas/assessment/properties/mulutKering'
-                perasaanPositif:
-                  $ref: '#/components/schemas/assessment/properties/perasaanPositif'
+                D:
+                  $ref: '#/components/schemas/assessment/properties/D'
+                A:
+                  $ref: '#/components/schemas/assessment/properties/A'
+                S:
+                  $ref: '#/components/schemas/assessment/properties/S'
                 keluhanTambahan:
                   $ref: '#/components/schemas/assessment/properties/keluhanTambahan'
       responses:
@@ -470,22 +465,34 @@ components:
       properties:
         id:
           type: string
-          example: 123
-        ketenangan:
-          type: number
-          minimum: 0
-          maximum: 3
-          example: 3
-        mulutKering:
-          type: number
-          minimum: 0
-          maximum: 3
-          example: 0
-        perasaanPositif:
-          type: number
-          minimum: 0
-          maximum: 3
-          example: 2
+          example: yj5pc_LARC_AgK61
+        D:
+          type: array
+          minItems: 7
+          maxItems: 7
+          items:
+            type: number
+            minimum: 0
+            maximum: 3
+          example: [3, 3, 3, 3, 1, 0, 1]
+        A:
+          type: array
+          minItems: 7
+          maxItems: 7
+          items:
+            type: number
+            minimum: 0
+            maximum: 3
+          example: [1, 0, 2, 1, 1, 2, 0]
+        S:
+          type: array
+          minItems: 7
+          maxItems: 7
+          items:
+            type: number
+            minimum: 0
+            maximum: 3
+          example: [3, 3, 3, 3, 1, 0, 1]
         keluhanTambahan:
           type: string
           example: "Saya merasa sulit akhir-akhir ini dan sering cemas tentang pekerjaan saya"
@@ -493,20 +500,38 @@ components:
           type: object
           properties:
             depresi:
-              type: number
-              minimum: 0
-              maximum: 100
-              example: 10
+              type: object
+              properties:
+                categorie:
+                  type: string
+                  example: "Sangat berat"
+                score:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                  example: 80
             kecemasan:
-              type: number
-              minimum: 0
-              maximum: 100
-              example: 80
+              type: object
+              properties:
+                categorie:
+                  type: string
+                  example: "Sedang"
+                score:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                  example: 60
             stres:
-              type: number
-              minimum: 0
-              maximum: 100
-              example: 60
+              type: object
+              properties:
+                categorie:
+                  type: string
+                  example: "Sedang"
+                score:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                  example: 60
         date:
           type: string
           format: date-time
