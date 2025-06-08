@@ -292,28 +292,27 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - perasaanNegatif
-                - ketenangan
-                - mulutKering
-                - perasaanPositif
-              properties:
-                ketenangan:
-                  $ref: '#/components/schemas/assessment/properties/ketenangan'
-                mulutKering:
-                  $ref: '#/components/schemas/assessment/properties/mulutKering'
-                perasaanPositif:
-                  $ref: '#/components/schemas/assessment/properties/perasaanPositif'
-                keluhanTambahan:
-                  $ref: '#/components/schemas/assessment/properties/keluhanTambahan'
+              $ref: '#/components/schemas/assessment/properties/assessment'
+
       responses:
         '200':
           description: Create assessment
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/assessment'
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    $ref: '#/components/schemas/assessment'
         '404':
           description: not found
           content:
@@ -343,7 +342,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/assessment'
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 200
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    $ref: '#/components/schemas/assessment'
   /news:
     get:
       tags:
@@ -470,44 +481,83 @@ components:
       properties:
         id:
           type: string
-          example: 123
-        ketenangan:
-          type: number
-          minimum: 0
-          maximum: 3
-          example: 3
-        mulutKering:
-          type: number
-          minimum: 0
-          maximum: 3
-          example: 0
-        perasaanPositif:
-          type: number
-          minimum: 0
-          maximum: 3
-          example: 2
-        keluhanTambahan:
+          example: yj5pc_LARC_AgK61
+        userId:
           type: string
-          example: "Saya merasa sulit akhir-akhir ini dan sering cemas tentang pekerjaan saya"
+          example: bwyec_LARC_AgK61
+        assessment:
+          type: object
+          properties:
+            D:
+              type: array
+              minItems: 7
+              maxItems: 7
+              items:
+                type: number
+                minimum: 0
+                maximum: 3
+              example: [3, 3, 3, 3, 1, 0, 1]
+            A:
+              type: array
+              minItems: 7
+              maxItems: 7
+              items:
+                type: number
+                minimum: 0
+                maximum: 3
+              example: [1, 0, 2, 1, 1, 2, 0]
+            S:
+              type: array
+              minItems: 7
+              maxItems: 7
+              items:
+                type: number
+                minimum: 0
+                maximum: 3
+              example: [3, 3, 3, 3, 1, 0, 1]
+            keluhanTambahan:
+              type: string
+              example: "Saya merasa sulit akhir-akhir ini dan sering cemas tentang pekerjaan saya"
         hasil:
           type: object
           properties:
             depresi:
-              type: number
-              minimum: 0
-              maximum: 100
-              example: 10
+              type: object
+              properties:
+                categorie:
+                  type: string
+                  example: "Sangat berat"
+                score:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                  example: 80
             kecemasan:
-              type: number
-              minimum: 0
-              maximum: 100
-              example: 80
+              type: object
+              properties:
+                categorie:
+                  type: string
+                  example: "Sedang"
+                score:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                  example: 60
             stres:
-              type: number
-              minimum: 0
-              maximum: 100
-              example: 60
-        date:
+              type: object
+              properties:
+                categorie:
+                  type: string
+                  example: "Sedang"
+                score:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                  example: 60
+            rekomendasi:
+              type: string
+              example: "Mengambil istirahat dan minum obat"
+        createdAt:
           type: string
           format: date-time
           example: 2022-01-01T00:00:00.000Z
