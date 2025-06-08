@@ -1,11 +1,12 @@
 const HelloController = require('../controllers/HelloController');
 const { registerSchema, loginSchema, updateUserSchema } = require('../../application/use_cases/validation/userValidation');
+const newAssessmentSchema = require('../../application/use_cases/validation/assessmentValidation');
 const userAuthorization = require('../../application/use_cases/validation/userAuthorization');
 const validationErrorHandler = require('../utils/validationErrorHandler');
 // const RegisterController = require('../controllers/RegisterController');
 const NewsController = require('../controllers/NewsController');
 
-const routes = (controller) => [
+const userRoutes = (controller) => [
   {
     method: 'GET',
     path: '/',
@@ -77,4 +78,18 @@ const routes = (controller) => [
   },
 ];
 
-module.exports = routes;
+const assessmentRoutes = (controller) => [
+  {
+    method: 'POST',
+    path: '/assessments',
+    options: {
+      validate: {
+        payload: newAssessmentSchema,
+        failAction: validationErrorHandler,
+      },
+    },
+    handler: controller.create.bind(controller),
+  },
+];
+
+module.exports = { userRoutes, assessmentRoutes };

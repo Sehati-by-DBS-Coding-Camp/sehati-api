@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 
 const pool = require('../../db/mysql/connection');
 const UserRepositoryMySQL = require('../../../interfaces/repositories/UserRepositoryMySQL');
+const AssessmentRepositoryMySQL = require('../../../interfaces/repositories/AssessmentRepositoryMySQL');
 const JwtAccessTokenManager = require('../../../interfaces/security/JwtAccessTokenManager');
 
 const RegisterUser = require('../../../application/use_cases/RegisterUser');
@@ -11,16 +12,23 @@ const LoginUser = require('../../../application/use_cases/LoginUser');
 const GetUserById = require('../../../application/use_cases/GetUserById');
 const UpdateUserById = require('../../../application/use_cases/UpdateUserById');
 
+const NewAssessment = require('../../../application/use_cases/NewAssessment');
+
 const UsersController = require('../../../interfaces/controllers/UsersController');
-const routes = require('../../../interfaces/routes/routes');
+const AssessmentController = require('../../../interfaces/controllers/AssessmentController');
+const { userRoutes, assessmentRoutes } = require('../../../interfaces/routes/routes');
 
 const init = async () => {
+  // Repository
   const userRepository = new UserRepositoryMySQL(pool);
+  const assessmentRepository = new AssessmentRepositoryMySQL(pool);
+
   const accessTokenManager = new JwtAccessTokenManager(Jwt.token);
   const registerUser = new RegisterUser({ userRepository, passwordHasher: bcrypt });
   const loginUser = new LoginUser({ userRepository, passwordHasher: bcrypt, accessTokenManager });
   const getUserById = new GetUserById(userRepository);
   const updateUserById = new UpdateUserById(userRepository);
+  const newAssessment = new NewAssessment(assessmentRepository);
 
   // Initialize UsersController with use cases
   const usersController = new UsersController({
@@ -28,6 +36,9 @@ const init = async () => {
     loginUser,
     getUserById,
     updateUserById,
+  });
+  const assessmentController = new AssessmentController({
+    newAssessment,
   });
 
   const server = Hapi.server({
@@ -63,7 +74,8 @@ const init = async () => {
 
   server.auth.default('jwt');
 
-  server.route(routes(usersController));
+  server.route(userRoutes(usersController));
+  server.route(assessmentRoutes(assessmentController));
 
   return server;
 };
