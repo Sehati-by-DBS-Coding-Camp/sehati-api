@@ -6,13 +6,21 @@ const assessmentSerializer = require('../serializers/assessmentSerializer');
 class AssessmentController {
   constructor({
     newAssessment, getAssessmentById, getAssessmentByUserId, getAllAssessment,
-    deleteAssessmentById,
+    deleteAssessmentById, GetNews,
   }) {
     this.newAssessment = newAssessment;
     this.getAllAssessment = getAllAssessment;
     this.getAssessmentById = getAssessmentById;
     this.getAssessmentByUserId = getAssessmentByUserId;
     this.deleteAssessmentById = deleteAssessmentById;
+    this.GetNews = GetNews;
+  }
+
+  static getHighestScoreType({ depresiScore, kecemasanScore, stresScore }) {
+    const maxScore = Math.max(depresiScore, kecemasanScore, stresScore);
+    if (maxScore === depresiScore) return 'mental+health+depression';
+    if (maxScore === kecemasanScore) return 'mental+health+anxiety';
+    return 'mental+health+stress';
   }
 
   async create(request, h) {
@@ -21,12 +29,18 @@ class AssessmentController {
       const userIdFromToken = request.auth.credentials.userId;
 
       const payload = { ...request.payload, id, userId: userIdFromToken };
-      // console.log(payload);
-      // console.log(userIdFromToken);
 
       const result = await this.newAssessment.execute(payload);
 
-      return h.response(assessmentSerializer.serialize({ data: result, code: 201 })).code(201);
+      const { depresiScore, kecemasanScore, stresScore } = result;
+      const highestType = AssessmentController
+        .getHighestScoreType({ depresiScore, kecemasanScore, stresScore });
+
+      const news = await this.GetNews.execute(highestType);
+
+      return h.response(assessmentSerializer.serialize({
+        data: result, news, code: 201,
+      })).code(201);
     } catch (err) {
       return Boom.badImplementation(err.message);
     }

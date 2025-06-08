@@ -11,6 +11,7 @@ const RegisterUser = require('../../../application/use_cases/RegisterUser');
 const LoginUser = require('../../../application/use_cases/LoginUser');
 const GetUserById = require('../../../application/use_cases/GetUserById');
 const UpdateUserById = require('../../../application/use_cases/UpdateUserById');
+const GetNews = require('../../../application/use_cases/GetNews');
 
 const NewAssessment = require('../../../application/use_cases/NewAssessment');
 
@@ -39,6 +40,7 @@ const init = async () => {
   });
   const assessmentController = new AssessmentController({
     newAssessment,
+    GetNews,
   });
 
   const server = Hapi.server({

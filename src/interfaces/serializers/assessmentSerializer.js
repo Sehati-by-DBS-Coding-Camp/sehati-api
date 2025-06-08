@@ -1,5 +1,5 @@
 module.exports = {
-  serialize({ data, code }) {
+  serialize({ data, news, code }) {
     return {
       statusCode: code,
       error: false,
@@ -28,6 +28,7 @@ module.exports = {
           },
           rekomendasi: data.rekomendasi || 'null',
         },
+        news: news || [],
         createdAt: data.createdAt || new Date().toISOString(),
       },
     };

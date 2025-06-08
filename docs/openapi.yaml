@@ -312,7 +312,20 @@ paths:
                     type: string
                     example: success
                   data:
-                    $ref: '#/components/schemas/assessment'
+                    type: object
+                    properties:
+                      id:
+                        $ref: '#/components/schemas/assessment/properties/id'
+                      userId:
+                        $ref: '#/components/schemas/assessment/properties/userId'
+                      assessment:
+                        $ref: '#/components/schemas/assessment/properties/assessment'
+                      hasil:
+                        $ref: '#/components/schemas/assessment/properties/hasil'
+                      news:
+                        $ref: '#/components/schemas/news'
+                      createdAt:
+                        $ref: '#/components/schemas/assessment/properties/createdAt'
         '404':
           description: not found
           content:
