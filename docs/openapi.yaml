@@ -9,7 +9,7 @@ info:
 servers:
   - url: http://localhost:3000
     description: Local Server
-  - url: https://sehati-api.arykurnia.my.id/v1/
+  - url: https://sehati-api.arykurnia.my.id
     description: Production Server
 paths:
   /:
