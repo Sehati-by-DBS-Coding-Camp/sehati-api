@@ -2,6 +2,7 @@ const Boom = require('@hapi/boom');
 const { nanoid } = require('nanoid');
 
 const assessmentSerializer = require('../serializers/assessmentSerializer');
+const getAssessmentByIdSerializer = require('../serializers/getAssessmentByIdSerializer');
 
 class AssessmentController {
   constructor({
@@ -46,12 +47,14 @@ class AssessmentController {
     }
   }
 
-  async get(request, h) {
+  async getById(request, h) {
     try {
       const { assessmentId } = request.params;
       const assessment = await this.getAssessmentById.execute(assessmentId);
 
-      return h.response(assessment).code(200);
+      return h.response(getAssessmentByIdSerializer.serialize({
+        data: assessment, code: 200,
+      })).code(200);
     } catch (err) {
       if (err.code === 'ASSESSMENT_NOT_FOUND') {
         return Boom.notFound('Assessment not found');
@@ -78,9 +81,39 @@ class AssessmentController {
   async getByUserId(request, h) {
     try {
       const { userId } = request.params;
-      const assessments = await this.getAssessmentByUserId.execute(userId);
+      const assessmentsListData = await this.getAssessmentByUserId.execute(userId);
 
-      return h.response(assessments).code(200);
+      const serializedData = assessmentsListData.map((data) => ({
+        id: data.id,
+        userId: data.userId,
+        hasil: {
+          depresi: {
+            categorie: data.depresiKategori,
+            score: data.depresiScore,
+          },
+          kecemasan: {
+            categorie: data.kecemasanKategori,
+            score: data.kecemasanScore,
+          },
+          stres: {
+            categorie: data.stresKategori,
+            score: data.stresScore,
+          },
+          rataRata: {
+            categorie: data.rataRataKategori,
+            score: data.rataRataScore,
+          },
+          predictedLabel: data.predictedLabel,
+        },
+        createdAt: data.createdAt,
+      }));
+
+      return h.response({
+        statusCode: 200,
+        error: false,
+        message: 'success',
+        data: serializedData,
+      }).code(200);
     } catch (err) {
       if (err.code === 'ASSESSMENT_NOT_FOUND') {
         return Boom.notFound('No assessments found for this user');

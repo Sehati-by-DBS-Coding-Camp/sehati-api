@@ -55,11 +55,16 @@ Clean Architecture adalah filosofi desain perangkat lunak (software) yang memisa
 **Conventional Commits**
 - `feat`: Penambahan fitur baru
 - `fix`: Memperbaiki bug
-- `docs`: Perubahan dokumentasi saja
-- `style`: Perubahan format/tata letak kode (indentasi, spasi, dsb), tanpa - mengubah logic
-- `refactor`: Refactor kode (mengubah struktur tanpa mengubah perilaku)
-- `test`: Menambah/memperbaiki test
-- `chore`: Perubahan minor atau tugas rutin (misal update dependency)
+- `docs`: Perubahan dokumentasi saja (tidak menyentuh kode aplikasi)
+- `style`: Perubahan format/tata letak kode (indentasi, spasi, titik koma, dsb), tanpa mengubah logic
+- `refactor`: Refactor kode (mengubah struktur/arsitektur tanpa mengubah perilaku/fitur)
+- `perf`: Perbaikan performa (optimasi, mempercepat eksekusi, dsb)
+- `test`: Menambah/memperbaiki kode pengujian (unit test, integration test, dsb)
+- `build`: Perubahan yang mempengaruhi sistem build atau dependency eksternal (npm, gradle, docker, dsb)
+- `ci`: Perubahan pada konfigurasi Continuous Integration (GitHub Actions, Travis, Circle, dsb)
+- `chore`: Perubahan minor atau tugas rutin (misal update dependency, bukan pada source code aplikasi)
+- `revert`: Membatalkan perubahan commit sebelumnya
+- `merge`: Commit hasil merge branch (opsional, biasanya auto-generated)
 
 **Contoh Penggunaan:**
 - `feat(auth): add fitur autentikasi`

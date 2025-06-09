@@ -280,7 +280,7 @@ paths:
                 statusCode: 404
                 error: true
                 message: user not found
-  /assessment:
+  /assessments:
     post:
       tags:
         - Assessment
@@ -334,7 +334,7 @@ paths:
                 statusCode: 404
                 error: true
                 message: not found
-  /assessment/{assessmentId}:
+  /assessments/{assessmentId}:
     get:
       tags:
         - Assessment
@@ -438,7 +438,28 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/assessment'
+                      type: object
+                      properties:
+                        id:
+                          $ref: '#/components/schemas/assessment/properties/id'
+                        userId:
+                          $ref: '#/components/schemas/assessment/properties/userId'
+                        hasil:
+                          type: object
+                          properties:
+                            depresi:
+                              $ref: '#/components/schemas/assessment/properties/hasil/properties/depresi'
+                            kecemasan:
+                              $ref: '#/components/schemas/assessment/properties/hasil/properties/kecemasan'
+                            stres:
+                              $ref: '#/components/schemas/assessment/properties/hasil/properties/stres'
+                            rataRata:
+                              $ref: '#/components/schemas/assessment/properties/hasil/properties/rataRata'
+                            predictedLabel:
+                              $ref: '#/components/schemas/assessment/properties/hasil/properties/predictedLabel'
+                        createdAt:
+                          $ref: '#/components/schemas/assessment/properties/createdAt'
+                        
         '404':
           description: not found
           content:
@@ -557,6 +578,17 @@ components:
                   maximum: 100
                   example: 60
             stres:
+              type: object
+              properties:
+                categorie:
+                  type: string
+                  example: "Sedang"
+                score:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                  example: 60
+            rataRata:
               type: object
               properties:
                 categorie:
