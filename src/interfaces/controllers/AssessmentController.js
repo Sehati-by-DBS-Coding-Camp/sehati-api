@@ -36,7 +36,8 @@ class AssessmentController {
       const highestType = AssessmentController
         .getHighestScoreType({ depresiScore, kecemasanScore, stresScore });
 
-      const news = await this.GetNews.execute(highestType);
+      const news = await this.GetNews.execute(`mental+health+${result.predictedLabel}` || highestType);
+      console.log(`mental+health+${result.predictedLabel}`);
 
       return h.response(assessmentSerializer.serialize({
         data: result, news, code: 201,
