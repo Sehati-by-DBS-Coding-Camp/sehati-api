@@ -1,6 +1,6 @@
-const axios = require('axios');
 const Boom = require('@hapi/boom');
-const { error } = require('winston');
+
+const { calculateDASS21Score, getPredictedLabel, getRekomendation } = require('../../interfaces/utils/calculateDASS21S');
 
 class NewAssessment {
   constructor(assessmentRepository) {
@@ -15,23 +15,45 @@ class NewAssessment {
       const [s1, s2, s3, s4, s5, s6, s7] = payload.S;
       const { id, userId, keluhanTambahan } = payload;
 
-      const url = 'http://35.219.5.8:8080/dass21/score';
-      const data = {
-        D: [d1, d2, d3, d4, d5, d6, d7],
-        A: [a1, a2, a3, a4, a5, a6, a7],
-        S: [a1, a2, a3, a4, a5, a6, a7],
-        keluhanTambahan,
-      };
-      const response = await axios.post(url, data);
-      // console.log(response.data);
+      const resultCalculateDASS21S = calculateDASS21Score({
+        d1,
+        d2,
+        d3,
+        d4,
+        d5,
+        d6,
+        d7,
+        a1,
+        a2,
+        a3,
+        a4,
+        a5,
+        a6,
+        a7,
+        s1,
+        s2,
+        s3,
+        s4,
+        s5,
+        s6,
+        s7,
+      });
 
-      const depresiKategori = response.data.categories.Depresi;
-      const kecemasanKategori = response.data.categories.Kecemasan;
-      const stresKategori = response.data.categories.Stres;
+      const depresiKategori = resultCalculateDASS21S.depresi.severity;
+      const kecemasanKategori = resultCalculateDASS21S.kecemasan.severity;
+      const stresKategori = resultCalculateDASS21S.stres.severity;
 
-      const depresiScore = response.data.scores.Depresi;
-      const kecemasanScore = response.data.scores.Kecemasan;
-      const stresScore = response.data.scores.Stres;
+      const depresiScore = resultCalculateDASS21S.depresi.score;
+      const kecemasanScore = resultCalculateDASS21S.kecemasan.score;
+      const stresScore = resultCalculateDASS21S.stres.score;
+
+      const predictedLabel = await getPredictedLabel(keluhanTambahan);
+      const rekomendasi = await getRekomendation({
+        depresi: depresiScore,
+        kecemasan: kecemasanScore,
+        stres: stresScore,
+        predictedLabel,
+      });
 
       const assessmentData = {
         id,
@@ -64,6 +86,8 @@ class NewAssessment {
         kecemasanScore,
         stresKategori,
         stresScore,
+        predictedLabel,
+        rekomendasi,
       };
 
       // console.log('Hehe: ', assessmentData);
