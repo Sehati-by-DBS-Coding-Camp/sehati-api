@@ -90,6 +90,23 @@ const assessmentRoutes = (controller) => [
     },
     handler: controller.create.bind(controller),
   },
+  {
+    method: 'GET',
+    path: '/history/{userId}',
+    options: {
+      pre: [
+        {
+          method: userAuthorization, // Middleware untuk otorisasi
+        },
+      ],
+    },
+    handler: controller.getByUserId.bind(controller),
+  },
+  {
+    method: 'GET',
+    path: '/assessments/{assessmentId}',
+    handler: controller.getById.bind(controller),
+  },
 ];
 
 module.exports = { userRoutes, assessmentRoutes };

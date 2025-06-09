@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 
 const logger = require('../../logger/logger');
 const pool = require('../../db/mysql/connection');
+const { calculateDASS21Score } = require('../../../interfaces/utils/calculateDASS21S');
+
 const UserRepositoryMySQL = require('../../../interfaces/repositories/UserRepositoryMySQL');
 const AssessmentRepositoryMySQL = require('../../../interfaces/repositories/AssessmentRepositoryMySQL');
 const JwtAccessTokenManager = require('../../../interfaces/security/JwtAccessTokenManager');
@@ -15,6 +17,8 @@ const UpdateUserById = require('../../../application/use_cases/UpdateUserById');
 const GetNews = require('../../../application/use_cases/GetNews');
 
 const NewAssessment = require('../../../application/use_cases/NewAssessment');
+const GetAssessmentByUserId = require('../../../application/use_cases/GetAssessmentByUserId');
+const GetAssessmentById = require('../../../application/use_cases/GetAssessmentById');
 
 const UsersController = require('../../../interfaces/controllers/UsersController');
 const AssessmentController = require('../../../interfaces/controllers/AssessmentController');
@@ -31,6 +35,8 @@ const init = async () => {
   const getUserById = new GetUserById(userRepository);
   const updateUserById = new UpdateUserById(userRepository);
   const newAssessment = new NewAssessment(assessmentRepository);
+  const getAssessmentByUserId = new GetAssessmentByUserId(assessmentRepository, calculateDASS21Score);
+  const getAssessmentById = new GetAssessmentById(assessmentRepository, calculateDASS21Score);
 
   // Initialize UsersController with use cases
   const usersController = new UsersController({
@@ -42,6 +48,8 @@ const init = async () => {
   const assessmentController = new AssessmentController({
     newAssessment,
     GetNews,
+    getAssessmentByUserId,
+    getAssessmentById,
   });
 
   const server = Hapi.server({

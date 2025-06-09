@@ -36,13 +36,24 @@ class AssessmentRepositoryMySQL extends AssessmentRepository {
     );
   }
 
-  async getAssessmentByUserId(userId) {
-    const [rows] = await this.pool.execute('SELECT * FROM dass21 WHERE userId = ?', [userId]);
+  async getByUserId(userId) {
+    const [rows] = await this.pool.execute('SELECT dassId, userId, d1, d2, d3, d4, d5, d6, d7, a1, a2, a3, a4, a5, a6, a7, s1, s2, s3, s4, s5, s6, s7, predicted_label, createdAt FROM dass21 WHERE userId = ?', [userId]);
     if (rows.length === 0) {
       const error = new Error('User not found');
       error.code = 'USER_NOT_FOUND';
       throw error;
     }
+    return rows;
+  }
+
+  async getById(dassId) {
+    const [rows] = await this.pool.execute('SELECT dassId, userId, d1, d2, d3, d4, d5, d6, d7, a1, a2, a3, a4, a5, a6, a7, s1, s2, s3, s4, s5, s6, s7, predicted_label, rekomendasi, createdAt FROM dass21 WHERE dassId = ?', [dassId]);
+    if (rows.length === 0) {
+      const error = new Error('id not found');
+      error.code = 'ID_NOT_FOUND';
+      throw error;
+    }
+    // console.log('rows: ', rows);
     return rows[0];
   }
 }

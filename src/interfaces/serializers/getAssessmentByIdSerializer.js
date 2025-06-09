@@ -1,5 +1,5 @@
 module.exports = {
-  serialize({ data, news, code }) {
+  serialize({ data, code }) {
     return {
       statusCode: code,
       error: false,
@@ -7,12 +7,6 @@ module.exports = {
       data: {
         id: data.id,
         userId: data.userId,
-        assessment: {
-          D: [data.d1, data.d2, data.d3, data.d4, data.d5, data.d6, data.d7],
-          A: [data.a1, data.a2, data.a3, data.a4, data.a5, data.a6, data.a7],
-          S: [data.s1, data.s2, data.s3, data.s4, data.s5, data.s6, data.s7],
-          keluhanTambahan: data.keluhanTambahan,
-        },
         hasil: {
           depresi: {
             categorie: data.depresiKategori,
@@ -31,10 +25,8 @@ module.exports = {
             score: data.rataRataScore,
           },
           predictedLabel: data.predictedLabel,
-          rekomendasi: data.rekomendasi || 'null',
         },
-        news: news || [],
-        createdAt: data.createdAt || new Date().toISOString(),
+        createdAt: data.createdAt,
       },
     };
   },
