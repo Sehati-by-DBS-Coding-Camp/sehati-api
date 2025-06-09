@@ -17,8 +17,8 @@ class AssessmentRepositoryMySQL extends AssessmentRepository {
         keluhan_tambahan,
         depresi_kategori, depresi_score,
         kecemasan_kategori, kecemasan_score,
-        stres_kategori, stres_score, predicted_label
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, LEFT(?, 256), ?, ?, ?, ?, ?, ?, ?)
+        stres_kategori, stres_score, rekomendasi, predicted_label
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, LEFT(?, 256), ?, ?, ?, ?, ?, ?, LEFT(?, 2000), ?)
     `;
     await this.pool.execute(
       sql,
@@ -31,7 +31,7 @@ class AssessmentRepositoryMySQL extends AssessmentRepository {
         data.depresiKategori, data.depresiScore,
         data.kecemasanKategori, data.kecemasanScore,
         data.stresKategori, data.stresScore,
-        data.predictedLabel,
+        data.rekomendasi, data.predictedLabel,
       ],
     );
   }

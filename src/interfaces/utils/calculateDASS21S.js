@@ -45,6 +45,8 @@ function calculateDASS21Score(answers) {
   const finalAnxietyScore = rawAnxietyScore * 2;
   const finalStressScore = rawStressScore * 2;
 
+  const finalRataRataScore = (finalDepressionScore + finalAnxietyScore + finalStressScore) / 3;
+
   // Fungsi helper untuk menentukan tingkat keparahan
   const getSeverity = (score, type) => {
     if (type === 'depresi') {
@@ -69,6 +71,15 @@ function calculateDASS21Score(answers) {
     return 'Tidak Diketahui'; // Seharusnya tidak tercapai
   };
 
+  // Fungsi helper untuk menentukan tingkat rata-rata keparahan
+  const getAverageSeverity = (averageScore) => {
+    if (averageScore >= 28) return 'Sangat Berat';
+    if (averageScore >= 21) return 'Berat';
+    if (averageScore >= 14) return 'Sedang';
+    if (averageScore >= 10) return 'Ringan';
+    return 'Normal';
+  };
+
   return {
     depresi: {
       score: finalDepressionScore,
@@ -81,6 +92,10 @@ function calculateDASS21Score(answers) {
     stres: {
       score: finalStressScore,
       severity: getSeverity(finalStressScore, 'stres'),
+    },
+    rataRata: {
+      score: finalRataRataScore,
+      severity: getAverageSeverity(finalRataRataScore),
     },
   };
 }

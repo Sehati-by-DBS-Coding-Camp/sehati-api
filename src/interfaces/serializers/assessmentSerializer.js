@@ -26,6 +26,10 @@ module.exports = {
             kategori: data.stresKategori,
             score: data.stresScore,
           },
+          rataRata: {
+            kategori: data.rataRataKategori,
+            score: data.rataRataScore,
+          },
           predictedLabel: data.predictedLabel,
           rekomendasi: data.rekomendasi || 'null',
         },

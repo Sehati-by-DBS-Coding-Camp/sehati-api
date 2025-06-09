@@ -280,7 +280,7 @@ paths:
                 statusCode: 404
                 error: true
                 message: user not found
-  /assessment:
+  /assessments:
     post:
       tags:
         - Assessment
@@ -334,7 +334,7 @@ paths:
                 statusCode: 404
                 error: true
                 message: not found
-  /assessment/{assessmentId}:
+  /assessments/{assessmentId}:
     get:
       tags:
         - Assessment
@@ -557,6 +557,17 @@ components:
                   maximum: 100
                   example: 60
             stres:
+              type: object
+              properties:
+                categorie:
+                  type: string
+                  example: "Sedang"
+                score:
+                  type: number
+                  minimum: 0
+                  maximum: 100
+                  example: 60
+            rataRata:
               type: object
               properties:
                 categorie:

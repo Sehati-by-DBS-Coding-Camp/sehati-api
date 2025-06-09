@@ -42,10 +42,12 @@ class NewAssessment {
       const depresiKategori = resultCalculateDASS21S.depresi.severity;
       const kecemasanKategori = resultCalculateDASS21S.kecemasan.severity;
       const stresKategori = resultCalculateDASS21S.stres.severity;
+      const rataRataKategori = resultCalculateDASS21S.rataRata.severity;
 
       const depresiScore = resultCalculateDASS21S.depresi.score;
       const kecemasanScore = resultCalculateDASS21S.kecemasan.score;
       const stresScore = resultCalculateDASS21S.stres.score;
+      const rataRataScore = resultCalculateDASS21S.rataRata.score;
 
       const predictedLabel = await getPredictedLabel(keluhanTambahan);
       const rekomendasi = await getRekomendation({
@@ -86,6 +88,8 @@ class NewAssessment {
         kecemasanScore,
         stresKategori,
         stresScore,
+        rataRataKategori,
+        rataRataScore,
         predictedLabel,
         rekomendasi,
       };
