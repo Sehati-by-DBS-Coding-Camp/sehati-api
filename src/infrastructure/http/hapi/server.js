@@ -2,6 +2,7 @@ const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
 const bcrypt = require('bcrypt');
 
+const logger = require('../../logger/logger');
 const pool = require('../../db/mysql/connection');
 const UserRepositoryMySQL = require('../../../interfaces/repositories/UserRepositoryMySQL');
 const AssessmentRepositoryMySQL = require('../../../interfaces/repositories/AssessmentRepositoryMySQL');
@@ -83,7 +84,7 @@ const init = async () => {
 };
 
 process.on('unhandledRejection', (err) => {
-  console.log(err);
+  logger.error(err);
   process.exit(1);
 });
 
