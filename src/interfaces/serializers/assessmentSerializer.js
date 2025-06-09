@@ -26,6 +26,7 @@ module.exports = {
             kategori: data.stresKategori,
             score: data.stresScore,
           },
+          predictedLabel: data.predictedLabel,
           rekomendasi: data.rekomendasi || 'null',
         },
         news: news || [],

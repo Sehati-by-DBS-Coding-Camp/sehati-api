@@ -567,6 +567,9 @@ components:
                   minimum: 0
                   maximum: 100
                   example: 60
+            predictedLabel:
+              type: string
+              example: "anxiety"
             rekomendasi:
               type: string
               example: "Mengambil istirahat dan minum obat"
