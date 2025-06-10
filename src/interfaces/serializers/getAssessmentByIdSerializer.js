@@ -25,6 +25,7 @@ module.exports = {
             score: data.rataRataScore,
           },
           predictedLabel: data.predictedLabel,
+          rekomendasi: data.rekomendasi,
         },
         createdAt: data.createdAt,
       },
