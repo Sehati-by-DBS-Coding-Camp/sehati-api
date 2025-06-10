@@ -1,5 +1,4 @@
 const axios = require('axios');
-const { Logger } = require('winston');
 
 class GetNews {
   static async execute(data) {
@@ -18,7 +17,6 @@ class GetNews {
 
       return response.data.articles;
     } catch (err) {
-      Logger.error('Error fetching news:', err.message);
       throw new Error(err.message);
     }
   }
