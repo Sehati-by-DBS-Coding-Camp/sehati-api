@@ -3,6 +3,7 @@ const { nanoid } = require('nanoid');
 
 const assessmentSerializer = require('../serializers/assessmentSerializer');
 const getAssessmentByIdSerializer = require('../serializers/getAssessmentByIdSerializer');
+const logger = require('../../infrastructure/logger/logger');
 
 class AssessmentController {
   constructor({
@@ -43,6 +44,12 @@ class AssessmentController {
         data: result, news, code: 201,
       })).code(201);
     } catch (err) {
+      if (err.code === 'ECONNRESET') {
+        logger.error('Connection error while creating assessment', { error: err });
+        return Boom.badGateway('A connection error occurred. Please try again later.');
+      }
+
+      logger.error('Error while creating assessment', { error: err });
       return Boom.badImplementation(err.message);
     }
   }
@@ -56,24 +63,15 @@ class AssessmentController {
         data: assessment, code: 200,
       })).code(200);
     } catch (err) {
-      if (err.code === 'ASSESSMENT_NOT_FOUND') {
-        return Boom.notFound('Assessment not found');
+      if (err.code === 'ID_NOT_FOUND') {
+        return Boom.notFound(err.message);
       }
-      return Boom.badImplementation(err.message);
-    }
-  }
-
-  async delete(request, h) {
-    try {
-      const { assessmentId } = request.params;
-
-      await this.deleteAssessmentById.execute(assessmentId);
-
-      return h.response({ message: 'Assessment deleted successfully' }).code(204);
-    } catch (err) {
-      if (err.code === 'ASSESSMENT_NOT_FOUND') {
-        return Boom.notFound('Assessment not found');
+      if (err.code === 'ECONNRESET') {
+        logger.error('Connection error while fetching assessment by ID', { error: err });
+        return Boom.badGateway('A connection error occurred. Please try again later.');
       }
+
+      logger.error('Error while fetching assessment by Assessment ID', { error: err });
       return Boom.badImplementation(err.message);
     }
   }
@@ -118,16 +116,11 @@ class AssessmentController {
       if (err.code === 'ASSESSMENT_NOT_FOUND') {
         return Boom.notFound('No assessments found for this user');
       }
-      return Boom.badImplementation(err.message);
-    }
-  }
-
-  async getAll(request, h) {
-    try {
-      const assessments = await this.getAllAssessment.execute();
-
-      return h.response(assessments).code(200);
-    } catch (err) {
+      if (err.code === 'ECONNRESET') {
+        logger.error('Connection error while fetching assessments', { error: err });
+        return Boom.badGateway('A connection error occurred. Please try again later.');
+      }
+      logger.error('Error while fetching assessments', { error: err });
       return Boom.badImplementation(err.message);
     }
   }

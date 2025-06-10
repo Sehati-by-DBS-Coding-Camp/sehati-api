@@ -142,17 +142,21 @@ const getRekomendation = async ({
 
   try {
     const response = await axios.post(url, data);
+    if (response.status !== 200) {
+      throw new Error('Gagal mendapatkan rekomendasi dari API');
+    }
+    if (!response.data.rekomendasi) {
+      throw new Error('Respons API tidak memiliki rekomendasi yang diharapkan');
+    }
     // Memastikan respons memiliki struktur yang diharapkan
     if (response.data && response.data.rekomendasi) {
       return response.data.rekomendasi;
     }
     console.warn('Respons API tidak memiliki rekomendasi yang diharapkan:', response.data);
     return null;
-  } catch (error) {
-    console.error('Terjadi kesalahan saat melakukan pengambilan rekomendasi:', error);
-    // Anda bisa menambahkan penanganan kesalahan yang lebih spesifik di sini,
-    // misalnya melempar error kembali atau mengembalikan pesan error.
-    return null;
+  } catch (err) {
+    console.error('Terjadi kesalahan saat melakukan pengambilan rekomendasi:', err);
+    throw new Error(err.message);
   }
 };
 
