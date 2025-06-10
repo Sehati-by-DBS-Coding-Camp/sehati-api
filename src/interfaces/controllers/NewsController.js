@@ -1,5 +1,6 @@
 const axios = require('axios');
 const Boom = require('@hapi/boom');
+const logger = require('../../infrastructure/logger/logger');
 
 class NewsController {
   static async news(request, h) {
@@ -15,6 +16,7 @@ class NewsController {
         data: response.data.articles,
       }).code(200);
     } catch (err) {
+      logger.error('Error fetching news', { error: err });
       return Boom.badImplementation(err.message);
     }
   }

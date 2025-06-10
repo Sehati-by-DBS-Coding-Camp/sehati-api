@@ -1,5 +1,6 @@
 const Boom = require('@hapi/boom');
 const { nanoid } = require('nanoid');
+const logger = require('../../infrastructure/logger/logger');
 
 const resgisterSerializer = require('../serializers/registrationSerializer');
 const loginSerializer = require('../serializers/loginSerializer');
@@ -27,6 +28,11 @@ class UsersController {
       return h.response(resgisterSerializer.serialize(payload, 201)).code(201);
     } catch (err) {
       if (err.code === 'ER_DUP_ENTRY') return Boom.conflict('Email already registered');
+      if (err.code === 'ECONNRESET') {
+        logger.error('Terjadi error saat proses register user', { error: err });
+        return Boom.badGateway('A connection error occurred. Please try again later.');
+      }
+      logger.error('Terjadi error saat proses register user', { error: err });
       return Boom.badImplementation(err.message);
     }
   }
@@ -53,6 +59,7 @@ class UsersController {
       if (err.code === 'USER_NOT_FOUND') {
         return Boom.notFound('User id not found');
       }
+      logger.error('Terjadi error saat pengambilan data profile user', { error: err });
       return Boom.badImplementation(err.message);
     }
   }
@@ -79,7 +86,16 @@ class UsersController {
         return Boom.badRequest('No changes made to the user');
       }
 
-      console.log(err);
+      if (err.code === 'ER_DUP_ENTRY') {
+        return Boom.conflict('Email already registered');
+      }
+
+      if (err.code === 'ECONNRESET') {
+        logger.error('Terjadi error saat update profile user', { error: err });
+        return Boom.badGateway('A connection error occurred. Please try again later.');
+      }
+
+      logger.error('Terjadi error saat update profile user', { error: err });
       return Boom.badImplementation(err.message);
     }
   }
