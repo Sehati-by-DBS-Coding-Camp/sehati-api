@@ -48,8 +48,7 @@ class AssessmentRepositoryMySQL extends AssessmentRepository {
       error.code = 'ID_NOT_FOUND';
       throw error;
     }
-    // console.log('rows: ', rows);
-    return rows;
+    return rows[0];
   }
 }
 
