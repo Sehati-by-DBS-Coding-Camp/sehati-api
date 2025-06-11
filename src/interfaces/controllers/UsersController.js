@@ -47,7 +47,7 @@ class UsersController {
       if (err.code === 'USER_NOT_FOUND' || err.code === 'INVALID_PASSWORD') {
         return Boom.unauthorized('Incorrect email or password');
       }
-
+      logger.error('Terjadi error saat proses login user', { error: err });
       return Boom.badImplementation(err.message);
     }
   }
