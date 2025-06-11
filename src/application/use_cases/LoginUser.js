@@ -10,10 +10,18 @@ class LoginUser {
   async execute({ email, password }) {
     // Validasi response perlu diperbaiki tiap kondisi
     const user = await this.userRepository.getUserByEmail(email);
-    if (!user) throw new Error('Invalid user');
+    if (!user) {
+      const error = new Error('User not found');
+      error.code = 'USER_NOT_FOUND';
+      throw error;
+    }
 
     const match = await this.passwordHasher.compare(password, user.password);
-    if (!match) throw new Error('Invalid password');
+    if (!match) {
+      const error = new Error('Invalid password');
+      error.code = 'INVALID_PASSWORD';
+      throw error;
+    }
 
     try {
       const accessToken = await this.accessTokenManager.createAccessToken({

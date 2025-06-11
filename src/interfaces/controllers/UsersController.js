@@ -44,7 +44,11 @@ class UsersController {
       return h.response(loginSerializer.serialize({ token: accessToken, user, code: 200 }))
         .code(200);
     } catch (err) {
-      return Boom.unauthorized('Invalid credentials');
+      if (err.code === 'USER_NOT_FOUND' || err.code === 'INVALID_PASSWORD') {
+        return Boom.unauthorized('Incorrect email or password');
+      }
+
+      return Boom.badImplementation(err.message);
     }
   }
 

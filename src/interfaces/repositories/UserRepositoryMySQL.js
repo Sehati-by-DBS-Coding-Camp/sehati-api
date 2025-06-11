@@ -16,11 +16,6 @@ class UserRepositoryMySQL extends UserRepository {
 
   async getUserByEmail(email) {
     const [rows] = await this.pool.execute('SELECT * FROM user WHERE email = ?', [email]);
-    if (rows.length === 0) {
-      const error = new Error('User not found');
-      error.code = 'USER_NOT_FOUND';
-      throw error;
-    }
     return rows[0];
   }
 
